@@ -5,28 +5,21 @@ namespace Aiursoft.WebDav.Middlewares
     /// <summary>
     /// WebDavContext
     /// </summary>
-    public class WebDavContext
+    public class WebDavContext(string baseUrl, string path, DepthMode depth)
     {
-        public WebDavContext(string baseUrl, string path, DepthMode depth)
-        {
-            BaseUrl = baseUrl;
-            Path = path.UrlDecode();
-            Depth = depth;
-        }
-
         /// <summary>
         /// BaseUrl
         /// </summary>
-        public string BaseUrl { get; set; }
+        public string BaseUrl { get; set; } = baseUrl;
 
         /// <summary>
         /// Path
         /// </summary>
-        public string Path { get; set; }
+        public string Path { get; set; } = path.UrlDecode();
 
         /// <summary>
         /// Depth
         /// </summary>
-        public DepthMode Depth { get; set; }
+        public DepthMode Depth { get; set; } = depth;
     }
 }

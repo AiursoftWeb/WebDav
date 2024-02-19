@@ -12,24 +12,15 @@ namespace Aiursoft.WebDav.Middlewares
     /// <summary>
     /// WebDavMiddleware
     /// </summary>
-    public class WebDavMiddleware
+    public class WebDavMiddleware(
+        RequestDelegate next,
+        IOptions<WebDavOptions> options,
+        IWebDavFilesystem filesystem,
+        ILogger<WebDavMiddleware> logger)
     {
-        // ReSharper disable once NotAccessedField.Local
-        private readonly RequestDelegate _next;
-        private readonly WebDavOptions _options;
-        private readonly ILogger<WebDavMiddleware> _logger;
-        private readonly IWebDavFilesystem _filesystem;
-        
-        public WebDavMiddleware(RequestDelegate next,
-            IOptions<WebDavOptions> options,
-            IWebDavFilesystem filesystem,
-            ILogger<WebDavMiddleware> logger)
-        {
-            _options = options.Value;
-            _next = next;
-            _filesystem = filesystem;
-            _logger = logger;
-        }
+        // ReSharper disable once UnusedMember.Global
+        public RequestDelegate Next { get; } = next;
+        private readonly WebDavOptions _options = options.Value;
 
         public async Task InvokeAsync(HttpContext context)
         {
@@ -46,14 +37,14 @@ namespace Aiursoft.WebDav.Middlewares
 
             context.SetWebDavContext(webDavContext);
 
-            _logger.LogTrace($"HTTP Request: {context.Request.Method} {context.Request.Path}");
+            logger.LogTrace($"HTTP Request: {context.Request.Method} {context.Request.Path}");
 
             var action =  context.Request.Method switch
             {
                 "OPTIONS" => ProcessOptionsAsync(context),
                 "PROPFIND" => ProcessPropfindAsync(context),
                 "PROPPATCH" => ProcessPropPatchAsync(context),
-                "MKCOL" => ProcessMKCOLAsync(context),
+                "MKCOL" => ProcessMkcolAsync(context),
                 "GET" => ProcessGetAsync(context),
                 "PUT" => ProcessPutAsync(context),
                 "HEAD" => ProcessHeadAsync(),
@@ -69,36 +60,30 @@ namespace Aiursoft.WebDav.Middlewares
 
         private Task ProcessOptionsAsync(HttpContext context)
         {
-            if (_options.IsReadOnly)
-            {
-                context.Response.Headers.Add("Allow", "OPTIONS, TRACE, GET, HEAD, PROPFIND");
-            }
-            else
-            {
-                context.Response.Headers.Add("Allow", "OPTIONS, TRACE, GET, HEAD, DELETE, PUT, POST, COPY, MOVE, MKCOL, PROPFIND, PROPPATCH, LOCK, UNLOCK");
-            }
-            
-            context.Response.Headers.Add("DAV", "1, 2");
-            context.Response.Headers.Add("MS-Author-Via", "DAV");
+            context.Response.Headers.Append("Allow",
+                _options.IsReadOnly
+                    ? "OPTIONS, TRACE, GET, HEAD, PROPFIND"
+                    : "OPTIONS, TRACE, GET, HEAD, DELETE, PUT, POST, COPY, MOVE, MKCOL, PROPFIND, PROPPATCH, LOCK, UNLOCK");
+
+            context.Response.Headers.Append("DAV", "1, 2");
+            context.Response.Headers.Append("MS-Author-Via", "DAV");
             return Task.CompletedTask;
         }
 
         private async Task ProcessGetAsync(HttpContext context)
         {
-            using (var fs = await _filesystem.OpenFileStreamAsync(context.GetWebDavContext()))
-            {
-                await fs.CopyToAsync(context.Response.Body);
-            }
+            await using var fs = await filesystem.OpenFileStreamAsync(context.GetWebDavContext());
+            await fs.CopyToAsync(context.Response.Body);
         }
 
-        private async Task ProcessMKCOLAsync(HttpContext context)
+        private async Task ProcessMkcolAsync(HttpContext context)
         {
             if (_options.IsReadOnly)
             {
                 throw new InvalidOperationException("The server is read-only. But the request is trying to create a collection.");
             }
 
-            var result = await _filesystem.CreateCollectionAsync(context.GetWebDavContext());
+            var result = await filesystem.CreateCollectionAsync(context.GetWebDavContext());
             
             context.Response.StatusCode = result.StatusCode;
         }
@@ -111,7 +96,7 @@ namespace Aiursoft.WebDav.Middlewares
             }
 
             context.Response.StatusCode = StatusCodes.Status201Created;
-            return _filesystem.WriteFileAsync(context.Request.Body, context.GetWebDavContext());
+            return filesystem.WriteFileAsync(context.Request.Body, context.GetWebDavContext());
         }
 
         private Task ProcessHeadAsync()
@@ -130,7 +115,7 @@ namespace Aiursoft.WebDav.Middlewares
 
         private async Task ProcessPropfindAsync(HttpContext context)
         {
-            var result = await _filesystem.FindPropertiesAsync(context.GetWebDavContext());
+            var result = await filesystem.FindPropertiesAsync(context.GetWebDavContext());
 
             context.Response.StatusCode = result.StatusCode;
 
@@ -174,7 +159,7 @@ namespace Aiursoft.WebDav.Middlewares
             }
 
             context.Response.StatusCode = StatusCodes.Status204NoContent;
-            return _filesystem.DeleteAsync(context.GetWebDavContext());
+            return filesystem.DeleteAsync(context.GetWebDavContext());
         }
 
         private async Task ProcessMoveAsync(HttpContext context)
@@ -193,10 +178,10 @@ namespace Aiursoft.WebDav.Middlewares
             var destination = destinations.First();
             // destination may be `http://localhost:12345/webdav/new-folder/dest.txt`
             // But what we actually need is `/new-folder/dest.txt`
-            var newUri = new Uri(destination);
+            var newUri = new Uri(destination!);
             var path = newUri.PathAndQuery.UrlDecode(); // /webdav/new-folder/dest.txt
-            var newPath = path.Substring(path.IndexOf('/', 1)); // /new-folder/dest.txt
-            await _filesystem.MoveToAsync(context.GetWebDavContext(), newPath);
+            var newPath = path[path.IndexOf('/', 1)..]; // /new-folder/dest.txt
+            await filesystem.MoveToAsync(context.GetWebDavContext(), newPath);
             context.Response.StatusCode = StatusCodes.Status201Created;
         }
 

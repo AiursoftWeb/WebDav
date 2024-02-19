@@ -5,23 +5,15 @@ namespace Aiursoft.WebDav.Middlewares.Results
     /// <summary>
     /// WebDavFile
     /// </summary>
-    public class WebDavFile : WebDavXmlResult
+    public class WebDavFile(FileInfo file) : WebDavXmlResult
     {
-        public WebDavFile(FileInfo file)
-        {
-            DisplayName = file.Name;
-            Length = file.Length;
-            CreatedAt = file.CreationTime;
-            ModifiedAt = file.LastWriteTime;
-        }
+        public string DisplayName { get; set; } = file.Name;
 
-        public string DisplayName { get; set; }
+        public long Length { get; set; } = file.Length;
 
-        public long Length { get; set; }
+        public DateTime? CreatedAt { get; set; } = file.CreationTime;
 
-        public DateTime? CreatedAt { get; set; }
-
-        public DateTime? ModifiedAt { get; set; }
+        public DateTime? ModifiedAt { get; set; } = file.LastWriteTime;
 
         public override XElement ToXml(WebDavContext context)
         {

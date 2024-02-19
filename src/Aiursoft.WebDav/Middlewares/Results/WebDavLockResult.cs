@@ -4,12 +4,7 @@ namespace Aiursoft.WebDav.Middlewares.Results
 {
     public class WebDavLockResult : WebDavXmlResult
     {
-        public WebDavLockResult()
-        {
-            Id = Guid.NewGuid();
-        }
-
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         public override XElement ToXml(WebDavContext context)
         {

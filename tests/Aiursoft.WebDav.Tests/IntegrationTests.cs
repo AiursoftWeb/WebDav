@@ -42,10 +42,14 @@ public class IntegrationTests
         var putFileResult = await client.PutFile("file.txt", new MemoryStream(Encoding.UTF8.GetBytes(newFileContent)));
         Assert.AreEqual((int)HttpStatusCode.Created, putFileResult.StatusCode);
         
+        // Edit a file
+        var editFileResult = await client.PutFile("file.txt", new MemoryStream(Encoding.UTF8.GetBytes(newFileContent + "2")));
+        Assert.AreEqual((int)HttpStatusCode.Created, editFileResult.StatusCode);
+        
         // Download a file
         var response = await client.GetRawFile("file.txt");
         var responseString = await new StreamReader(response.Stream).ReadToEndAsync();
-        Assert.AreEqual(newFileContent, responseString);
+        Assert.AreEqual(newFileContent + "2", responseString);
         
         // Create a folder
         var createFolderResult = await client.Mkcol("new-folder");

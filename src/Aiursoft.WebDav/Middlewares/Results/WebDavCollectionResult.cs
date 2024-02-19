@@ -2,14 +2,9 @@
 
 namespace Aiursoft.WebDav.Middlewares.Results
 {
-    class WebDavCollectionResult : WebDavXmlResult
+    class WebDavCollectionResult(DirectoryInfo directory) : WebDavXmlResult
     {
-        public WebDavCollectionResult(DirectoryInfo directory)
-        {
-            Directory = directory;
-        }
-
-        public DirectoryInfo Directory { get; }
+        public DirectoryInfo Directory { get; } = directory;
 
         public override XElement ToXml(WebDavContext context)
         {

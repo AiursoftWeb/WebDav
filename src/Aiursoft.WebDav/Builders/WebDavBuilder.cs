@@ -2,13 +2,8 @@
 
 namespace Aiursoft.WebDav.Builders
 {
-    class WebDavBuilder : IWebDavBuilder
+    class WebDavBuilder(IServiceCollection services) : IWebDavBuilder
     {
-        public WebDavBuilder(IServiceCollection services)
-        {
-            Services = services;
-        }
-
-        public IServiceCollection Services { get; }
+        public IServiceCollection Services { get; } = services;
     }
 }

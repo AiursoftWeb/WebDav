@@ -2,13 +2,8 @@
 
 namespace Aiursoft.WebDav.Middlewares.Results
 {
-    public class WebDavNoContentResult : IWebDavResult
+    public class WebDavNoContentResult(HttpStatusCode statusCode) : IWebDavResult
     {
-        public WebDavNoContentResult(HttpStatusCode statusCode)
-        {
-            StatusCode = (int)statusCode;
-        }
-
-        public virtual int StatusCode { get; }
+        public virtual int StatusCode { get; } = (int)statusCode;
     }
 }
