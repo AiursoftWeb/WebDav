@@ -8,15 +8,15 @@ namespace Aiursoft.WebDav.Middlewares.Results
 
         public override XElement ToXml(WebDavContext context)
         {
-            return new XElement(dav + "multistatus",
-                new XElement(dav + "response",
-                    new XElement(dav + "href", $"{context.BaseUrl}/"),
-                    new XElement(dav + "propstat",
-                        new XElement(dav + "prop",
-                            new XElement(dav + "displayname", Directory.Name),
-                            new XElement(dav + "resourcetype",
-                                new XElement(dav + "collection"))),
-                        new XElement(dav + "status", "HTTP/1.1 200 OK")
+            return new XElement(Dav + "multistatus",
+                new XElement(Dav + "response",
+                    new XElement(Dav + "href", $"{context.BaseUrl}/"),
+                    new XElement(Dav + "propstat",
+                        new XElement(Dav + "prop",
+                            new XElement(Dav + "displayname", Directory.Name),
+                            new XElement(Dav + "resourcetype",
+                                new XElement(Dav + "collection"))),
+                        new XElement(Dav + "status", "HTTP/1.1 200 OK")
                         )),
                 context.Depth == DepthMode.One ? Directory.GetDirectories()
                                                     .Select(x => new WebDavCollectionResult(x).ToXml(context))

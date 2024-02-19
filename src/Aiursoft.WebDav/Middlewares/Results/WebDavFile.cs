@@ -17,14 +17,14 @@ namespace Aiursoft.WebDav.Middlewares.Results
 
         public override XElement ToXml(WebDavContext context)
         {
-            return new XElement(dav + "response",
-                        new XElement(dav + "href", $"{context.BaseUrl}/{DisplayName}"),
-                        new XElement(dav + "propstat",
-                            new XElement(dav + "prop",
-                             new XElement(dav + "displayname", DisplayName),
-                             new XElement(dav + "getcontentlength", $"{Length}"),
-                             new XElement(dav + "creationdate", $"{CreatedAt:yyyy-MM-ddTHH:mm:sszzz}"),
-                             new XElement(dav + "getlastmodified", $"{ModifiedAt:yyyy-MM-ddTHH:mm:sszzz}")
+            return new XElement(Dav + "response",
+                        new XElement(Dav + "href", $"{context.BaseUrl}/{DisplayName}"),
+                        new XElement(Dav + "propstat",
+                            new XElement(Dav + "prop",
+                             new XElement(Dav + "displayname", DisplayName),
+                             new XElement(Dav + "getcontentlength", $"{Length}"),
+                             new XElement(Dav + "creationdate", $"{CreatedAt:yyyy-MM-ddTHH:mm:sszzz}"),
+                             new XElement(Dav + "getlastmodified", $"{ModifiedAt:yyyy-MM-ddTHH:mm:sszzz}")
                              ))
                 );
         }

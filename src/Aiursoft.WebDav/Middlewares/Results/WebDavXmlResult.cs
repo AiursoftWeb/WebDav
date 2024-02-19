@@ -5,7 +5,7 @@ namespace Aiursoft.WebDav.Middlewares.Results
 {
     public abstract class WebDavXmlResult : IWebDavXmlResult
     {
-        protected XNamespace dav = "DAV:";
+        protected readonly XNamespace Dav = "DAV:";
 
         public virtual int StatusCode => (int)HttpStatusCode.MultiStatus;
 

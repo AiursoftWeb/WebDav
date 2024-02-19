@@ -8,18 +8,18 @@ namespace Aiursoft.WebDav.Middlewares.Results
 
         public override XElement ToXml(WebDavContext context)
         {
-            return new XElement(dav + "prop",
-                new XAttribute(XNamespace.Xmlns + "d", dav),
-                        new XElement(dav + "lockdiscovery",
-                            new XElement(dav + "activelock",
-                                new XElement(dav + "lockscope",
-                                    new XElement(dav + "exclusive")),
-                                new XElement(dav + "locktype",
-                                    new XElement(dav + "write")),
-                                new XElement(dav + "depth", "Infinity"),
-                                new XElement(dav + "timeout", "Second-604800"),
-                                new XElement(dav + "locktoken",
-                                    new XElement(dav + "href", $"opaquelocktoken:{Id}")))
+            return new XElement(Dav + "prop",
+                new XAttribute(XNamespace.Xmlns + "d", Dav),
+                        new XElement(Dav + "lockdiscovery",
+                            new XElement(Dav + "activelock",
+                                new XElement(Dav + "lockscope",
+                                    new XElement(Dav + "exclusive")),
+                                new XElement(Dav + "locktype",
+                                    new XElement(Dav + "write")),
+                                new XElement(Dav + "depth", "Infinity"),
+                                new XElement(Dav + "timeout", "Second-604800"),
+                                new XElement(Dav + "locktoken",
+                                    new XElement(Dav + "href", $"opaquelocktoken:{Id}")))
                 ));
         }
     }
