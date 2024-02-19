@@ -21,12 +21,17 @@ dotnet add package Aiursoft.WebDav
 You can use this middleware in your `Startup.cs` file:
 
 ```csharp
+var IsReadOnlyWebDavServer = false;
+var webDavRoot = "/tmp";
+
 var builder = WebApplication.CreateBuilder();
 builder.Services
-    .AddWebDav(x => x.IsReadOnly = !webDavCanWrite)
-    .AddFilesystem(options => options.SourcePath = contentRoot);
+    .AddWebDav(x => x.IsReadOnly = IsReadOnlyWebDavServer)
+    .AddFilesystem(options => options.SourcePath = webDavRoot);
 
 var host = builder.Build();
+
+// Use it as a middleware.
 host.UseWebDav(new PathString("/webdav"));
 ```
 
