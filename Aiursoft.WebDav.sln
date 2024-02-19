@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{32F801FE-41C3-4F01-8999-6D164DD36157}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{C1F6B656-5BDF-49CC-A3EB-EE63038C8215}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aiursoft.WebDav", "src\Aiursoft.WebDav\Aiursoft.WebDav.csproj", "{A261996E-3E23-4DE9-B4CB-71205A13AA16}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aiursoft.WebDav.Tests", "tests\Aiursoft.WebDav.Tests\Aiursoft.WebDav.Tests.csproj", "{5A0B7E2F-0495-42CE-B077-B91844B6921C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A261996E-3E23-4DE9-B4CB-71205A13AA16} = {32F801FE-41C3-4F01-8999-6D164DD36157}
+		{5A0B7E2F-0495-42CE-B077-B91844B6921C} = {C1F6B656-5BDF-49CC-A3EB-EE63038C8215}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A261996E-3E23-4DE9-B4CB-71205A13AA16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A261996E-3E23-4DE9-B4CB-71205A13AA16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A261996E-3E23-4DE9-B4CB-71205A13AA16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A261996E-3E23-4DE9-B4CB-71205A13AA16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A0B7E2F-0495-42CE-B077-B91844B6921C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A0B7E2F-0495-42CE-B077-B91844B6921C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A0B7E2F-0495-42CE-B077-B91844B6921C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A0B7E2F-0495-42CE-B077-B91844B6921C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
