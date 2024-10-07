@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <Version>8.0.1</Version>
+    <Version>8.0.2</Version>
     <TargetFramework>net8.0</TargetFramework>
     <AssemblyName>Aiursoft.WebDav</AssemblyName>
     <RootNamespace>Aiursoft.WebDav</RootNamespace>
@@ -15,6 +15,10 @@
     <Description>WebDAV middleware for ASP.NET Core</Description>
     <PackageId>Aiursoft.WebDav</PackageId>
     <PackageTags>nuget package dotnet csproj webdav aspnet</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://gitlab.aiursoft.cn/aiursoft/webdav</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://gitlab.aiursoft.cn/aiursoft/webdav.git</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   <ItemGroup>
