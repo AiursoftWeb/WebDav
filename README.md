@@ -8,7 +8,7 @@
 
 WebDav is an ASP.NET Core middleware that provides a WebDav server for your application.
 
-## Installation
+## How to install
 
 To install `Aiursoft.WebDav` to your project from [nuget.org](https://www.nuget.org/packages/Aiursoft.WebDav/):
 
