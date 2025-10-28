@@ -4,7 +4,7 @@
 [![Pipeline stat](https://gitlab.aiursoft.com/aiursoft/webdav/badges/master/pipeline.svg)](https://gitlab.aiursoft.com/aiursoft/webdav/-/pipelines)
 [![Test Coverage](https://gitlab.aiursoft.com/aiursoft/webdav/badges/master/coverage.svg)](https://gitlab.aiursoft.com/aiursoft/webdav/-/pipelines)
 [![NuGet version (Aiursoft.WebDav)](https://img.shields.io/nuget/v/Aiursoft.webdav.svg)](https://www.nuget.org/packages/Aiursoft.webdav/)
-[![ManHours](https://manhours.aiursoft.cn/r/gitlab.aiursoft.com/aiursoft/webdav.svg)](https://gitlab.aiursoft.com/aiursoft/webdav/-/commits/master?ref_type=heads)
+[![ManHours](https://manhours.aiursoft.com/r/gitlab.aiursoft.com/aiursoft/webdav.svg)](https://gitlab.aiursoft.com/aiursoft/webdav/-/commits/master?ref_type=heads)
 
 WebDav is an ASP.NET Core middleware that provides a WebDav server for your application.
 
