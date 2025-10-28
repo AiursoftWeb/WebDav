@@ -16,9 +16,9 @@
     <PackageId>Aiursoft.WebDav</PackageId>
     <PackageTags>nuget package dotnet csproj webdav aspnet</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://gitlab.aiursoft.cn/aiursoft/webdav</PackageProjectUrl>
+    <PackageProjectUrl>https://gitlab.aiursoft.com/aiursoft/webdav</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://gitlab.aiursoft.cn/aiursoft/webdav.git</RepositoryUrl>
+    <RepositoryUrl>https://gitlab.aiursoft.com/aiursoft/webdav.git</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   <ItemGroup>
