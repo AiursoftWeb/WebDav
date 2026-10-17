@@ -1,8 +1,6 @@
-﻿using System.Net;
-using System.Text;
+using System.Net;
+using System.Xml.Linq;
 using Aiursoft.CSTools.Tools;
-
-using WebDav;
 
 namespace Aiursoft.WebDav.Tests;
 
@@ -26,65 +24,78 @@ public class IntegrationTests
     public async Task TestWebDav()
     {
         var availablePort = Network.GetAvailablePort();
-        var webServer = TestServerBuilder.BuildApp(
+        await using var webServer = TestServerBuilder.BuildApp(
             Path.Combine(AppContext.BaseDirectory, "Assets"),
             availablePort,
             true);
 
         await webServer.StartAsync();
-        await Task.Delay(1000);
+        using var client = new HttpClient();
+        client.BaseAddress = new Uri($"http://localhost:{availablePort}/webdav/");
 
-        var clientParams = new WebDavClientParams { BaseAddress = new Uri($"http://localhost:{availablePort}/webdav/") };
-        using var client = new WebDavClient(clientParams);
+        static async Task MoveAsync(HttpClient client, string source, string destination)
+        {
+            using var request = new HttpRequestMessage(new HttpMethod("MOVE"), source);
+            request.Headers.Add("Destination", new Uri(client.BaseAddress!, destination).AbsoluteUri);
+            using var response = await client.SendAsync(request);
+            Assert.AreEqual(HttpStatusCode.Created, response.StatusCode);
+        }
 
-        // Put a file
-        var newFileContent = "MyTestFile Content";
-        var putFileResult = await client.PutFile("file.txt", new MemoryStream(Encoding.UTF8.GetBytes(newFileContent)));
-        Assert.AreEqual((int)HttpStatusCode.Created, putFileResult.StatusCode);
+        static async Task<XDocument> PropfindAsync(HttpClient client, string path)
+        {
+            using var request = new HttpRequestMessage(new HttpMethod("PROPFIND"), path);
+            request.Headers.Add("Depth", "1");
+            using var response = await client.SendAsync(request);
+            Assert.AreEqual(HttpStatusCode.MultiStatus, response.StatusCode);
+            return XDocument.Parse(await response.Content.ReadAsStringAsync());
+        }
 
-        // Edit a file
-        var editFileResult = await client.PutFile("file.txt", new MemoryStream(Encoding.UTF8.GetBytes(newFileContent + "2")));
-        Assert.AreEqual((int)HttpStatusCode.Created, editFileResult.StatusCode);
+        XNamespace dav = "DAV:";
 
-        // Download a file
-        var response = await client.GetRawFile("file.txt");
-        var responseString = await new StreamReader(response.Stream).ReadToEndAsync();
-        Assert.AreEqual(newFileContent + "2", responseString);
+        // Put a file.
+        const string newFileContent = "MyTestFile Content";
+        using var newContent = new StringContent(newFileContent);
+        using var putFileResult = await client.PutAsync("file.txt", newContent);
+        Assert.AreEqual(HttpStatusCode.Created, putFileResult.StatusCode);
 
-        // Create a folder
-        var createFolderResult = await client.Mkcol("new-folder");
-        Assert.AreEqual((int)HttpStatusCode.Created, createFolderResult.StatusCode);
+        // Edit a file.
+        using var editedContent = new StringContent(newFileContent + "2");
+        using var editFileResult = await client.PutAsync("file.txt", editedContent);
+        Assert.AreEqual(HttpStatusCode.Created, editFileResult.StatusCode);
 
-        // Move a file
-        var moveResult = await client.Move("file.txt", "new-folder/dest.txt");
-        Assert.AreEqual((int)HttpStatusCode.Created, moveResult.StatusCode);
+        // Download a file.
+        using var response = await client.GetAsync("file.txt");
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        Assert.AreEqual(newFileContent + "2", await response.Content.ReadAsStringAsync());
 
-        // List folder content
-        var list = await client.Propfind("new-folder");
-        Assert.IsTrue(list.Resources.Any(f => f.Uri!.ToString().EndsWith("dest.txt")));
+        // Create a folder.
+        using var createFolderRequest = new HttpRequestMessage(new HttpMethod("MKCOL"), "new-folder");
+        using var createFolderResult = await client.SendAsync(createFolderRequest);
+        Assert.AreEqual(HttpStatusCode.Created, createFolderResult.StatusCode);
 
-        // Move a folder
-        var moveFolderResult = await client.Move("new-folder", "new-folder2");
-        Assert.AreEqual((int)HttpStatusCode.Created, moveFolderResult.StatusCode);
+        // Move a file and list the folder content.
+        await MoveAsync(client, "file.txt", "new-folder/dest.txt");
+        var list = await PropfindAsync(client, "new-folder");
+        Assert.IsTrue(list.Descendants(dav + "href").Any(href => href.Value.EndsWith("dest.txt")));
 
-        // List folder content
-        list = await client.Propfind("new-folder2");
-        Assert.IsTrue(list.Resources.Any(f => f.Uri!.ToString().EndsWith("dest.txt")));
+        // Move a folder and verify its content.
+        await MoveAsync(client, "new-folder", "new-folder2");
+        list = await PropfindAsync(client, "new-folder2");
+        Assert.IsTrue(list.Descendants(dav + "href").Any(href => href.Value.EndsWith("dest.txt")));
 
-        // Delete a folder
-        var deleteResult = await client.Delete("new-folder2");
-        Assert.AreEqual((int)HttpStatusCode.NoContent, deleteResult.StatusCode);
+        // Delete a folder.
+        using var deleteResult = await client.DeleteAsync("new-folder2");
+        Assert.AreEqual(HttpStatusCode.NoContent, deleteResult.StatusCode);
 
-        // Put a file
-        var putFileResult2 = await client.PutFile("file2.txt", new MemoryStream(Encoding.UTF8.GetBytes(newFileContent)));
-        Assert.AreEqual((int)HttpStatusCode.Created, putFileResult2.StatusCode);
+        // Put and delete another file.
+        using var secondContent = new StringContent(newFileContent);
+        using var putFileResult2 = await client.PutAsync("file2.txt", secondContent);
+        Assert.AreEqual(HttpStatusCode.Created, putFileResult2.StatusCode);
+        using var deleteFileResult = await client.DeleteAsync("file2.txt");
+        Assert.AreEqual(HttpStatusCode.NoContent, deleteFileResult.StatusCode);
 
-        // Delete a file
-        var deleteFileResult = await client.Delete("file2.txt");
-        Assert.AreEqual((int)HttpStatusCode.NoContent, deleteFileResult.StatusCode);
-
-        // List folder content
-        list = await client.Propfind("");
-        Assert.IsFalse(list.Resources.Any(f => f.Uri!.ToString().EndsWith("dest.txt")));
+        // List the root folder after deleting the moved collection.
+        list = await PropfindAsync(client, string.Empty);
+        Assert.IsFalse(list.Descendants(dav + "href").Any(href => href.Value.EndsWith("dest.txt")));
     }
 }
