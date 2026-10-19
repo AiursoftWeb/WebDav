@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <Version>10.0.0</Version>
+    <Version>10.0.1</Version>
     <TargetFramework>net10.0</TargetFramework>
     <AssemblyName>Aiursoft.WebDav</AssemblyName>
     <RootNamespace>Aiursoft.WebDav</RootNamespace>
@@ -16,9 +16,9 @@
     <PackageId>Aiursoft.WebDav</PackageId>
     <PackageTags>nuget package dotnet csproj webdav aspnet</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://gitlab.aiursoft.com/aiursoft/webdav</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/AiursoftWeb/webdav</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://gitlab.aiursoft.com/aiursoft/webdav.git</RepositoryUrl>
+    <RepositoryUrl>https://github.com/AiursoftWeb/webdav.git</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   <ItemGroup>

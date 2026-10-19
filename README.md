@@ -1,6 +1,6 @@
 # Aiursoft WebDav
 
-[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://gitlab.aiursoft.com/aiursoft/webdav/-/blob/master/LICENSE)
+[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/AiursoftWeb/webdav/blob/master/LICENSE)
 [![Pipeline stat](https://gitlab.aiursoft.com/aiursoft/webdav/badges/master/pipeline.svg)](https://gitlab.aiursoft.com/aiursoft/webdav/-/pipelines)
 [![Test Coverage](https://gitlab.aiursoft.com/aiursoft/webdav/badges/master/coverage.svg)](https://gitlab.aiursoft.com/aiursoft/webdav/-/pipelines)
 [![NuGet version (Aiursoft.WebDav)](https://img.shields.io/nuget/v/Aiursoft.webdav.svg)](https://www.nuget.org/packages/Aiursoft.webdav/)
