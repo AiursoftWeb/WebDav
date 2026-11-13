@@ -24,7 +24,7 @@ namespace Aiursoft.WebDav.Middlewares.Results
                                                     .Concat(
                                                     Directory
                                                     .GetFiles()
-                                                    .OrderBy(x => x.Name)
+                                                    .OrderBy(x => x.Name, StringComparer.Ordinal)
                                                     .Select(x => new WebDavFile(x).ToXml(context))
                                                     .ToArray()) : new XElement[0]
                 );
